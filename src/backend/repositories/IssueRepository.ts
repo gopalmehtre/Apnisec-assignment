@@ -100,9 +100,17 @@ export class IssueRepository {
   }
 
   async delete(id: string): Promise<void> {
-    await prisma.issue.delete({
-      where: { id },
-    });
+    try {
+      await prisma.issue.delete({
+        where: { id },
+      });
+    } catch (error: any) {
+      // Prisma error code for "Record to delete does not exist."
+      if (error.code === 'P2025') {
+        throw new NotFoundError('Issue not found');
+      }
+      throw error;
+    }
   }
 
   async isOwner(issueId: string, userId: string): Promise<boolean> {

@@ -73,11 +73,13 @@ export class IssueService {
   }
 
   async deleteIssue(userId: string, issueId: string): Promise<void> {
-    const isOwner = await this.issueRepository.isOwner(issueId, userId);
-    if (!isOwner) {
+    const issue = await this.issueRepository.findById(issueId);
+    if (!issue) {
+      throw new NotFoundError('Issue not found');
+    }
+    if (issue.userId !== userId) {
       throw new ForbiddenError('You do not have access to this issue');
     }
-
     await this.issueRepository.delete(issueId);
   }
 }

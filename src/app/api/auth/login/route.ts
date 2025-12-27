@@ -9,13 +9,11 @@ const authController = new AuthController();
 export async function POST(request: NextRequest) {
   try {
     RateLimiter.check(request);
-
-    const response = await authController.register(request);
+    const response = await authController.login(request);
     const headers = RateLimiter.getHeaders(request);
     Object.entries(headers).forEach(([key, value]) => {
       response.headers.set(key, value);
     });
-
     return response;
   } catch (error) {
     if (error instanceof AppError) {

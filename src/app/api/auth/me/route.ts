@@ -6,10 +6,10 @@ import { AppError } from '@/backend/errors/AppError';
 
 const authController = new AuthController();
 
-export async function POST(request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
     RateLimiter.check(request);
-    const response = await authController.login(request);
+    const response = await authController.getCurrentUser(request);
     const headers = RateLimiter.getHeaders(request);
     Object.entries(headers).forEach(([key, value]) => {
       response.headers.set(key, value);
