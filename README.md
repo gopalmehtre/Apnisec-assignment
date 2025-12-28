@@ -167,6 +167,5 @@ A full-stack web application built with **Next.js**, **TypeScript**, **Prisma**,
 
 ---
 
-## License
-
-MIT
+## Author
+- Gopal Mehtre
