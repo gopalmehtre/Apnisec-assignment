@@ -54,18 +54,16 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  contextPromise: Promise<{ params: { id: string } }>
 ) {
+  const { params } = await contextPromise;
   try {
     RateLimiter.check(request);
-    
     const response = await issueController.deleteIssue(request, params.id);
-    
     const headers = RateLimiter.getHeaders(request);
     Object.entries(headers).forEach(([key, value]) => {
       response.headers.set(key, value);
     });
-
     return response;
   } catch (error) {
     if (error instanceof AppError) {
